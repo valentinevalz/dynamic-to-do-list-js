@@ -6,15 +6,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskList = document.getElementById('task-list');     // This is the big list where our tasks will show up!
 
     // This array will hold all our tasks so our helper can remember them easily.
+    // It's like our helper's own little memory of all the jobs!
     let tasks = [];
 
     // 2. This is a special instruction for "how to add a new job" to our list!
-    // Now, it also has a secret friend called 'save' which tells it if it needs to remember the job for later!
-    function addTask(taskTextFromInput, save = true) {
-        // First, let's get the words you typed in the box and make sure there are no extra spaces!
-        const taskText = taskTextFromInput.trim();
+    // It takes a special helper-word 'taskContentArg'. If it's not there, it means you typed it!
+    // 'save' is a secret word to tell our helper if it should remember this job for later.
+    function addTask(taskContentArg, save = true) {
+        let taskText; // This is where we'll put the job words.
 
-        // If you didn't type any words (it's empty!), we'll say "Oops!"
+        // Is this job coming from the secret remembering book (taskContentArg is a real word)?
+        if (taskContentArg !== undefined && taskContentArg !== null && typeof taskContentArg === 'string') {
+            taskText = taskContentArg.trim(); // Use the words from the secret book!
+        } else {
+            // No, this job is new! So, get the words directly from the typing box, just like you asked!
+            taskText = taskInput.value.trim();
+        }
+
+        // If the job words are empty (like you didn't type anything!), we'll say "Oops!"
         if (taskText === '') {
             alert('Please enter a task! Don\'t forget your job!'); // This is like us saying "Hey, put something in!"
             return; // And then we stop here, because there's nothing to add!
@@ -23,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // If you *did* type words, let's make a new job item!
         // A. Make a new line on our paper for this job (an 'li' element)
         const listItem = document.createElement('li');
-        listItem.textContent = taskText; // Put the words you typed onto this new line!
+        listItem.textContent = taskText; // Put the job words on our new line!
 
         // B. Make a "Remove" button for this job (like a little eraser!)
         const removeButton = document.createElement('button');
@@ -82,14 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 3. Now, let's teach our computer helper how to *listen*!
 
     // When we push the 'Add Task' button, tell our helper to run the 'addTask' instructions!
-    addButton.addEventListener('click', function() {
-        addTask(taskInput.value); // Add the job typed in the box
-    });
+    // We call addTask() without arguments, so it knows to get the words from the typing box!
+    addButton.addEventListener('click', addTask);
 
     // If we press a key in the task input box, and it's the 'Enter' key, also add the job!
+    // We call addTask() without arguments here too!
     taskInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            addTask(taskInput.value); // Add the job typed in the box
+            addTask(); // Run the 'addTask' instructions!
         }
     });
 
